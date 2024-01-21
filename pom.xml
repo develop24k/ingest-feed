@@ -18,12 +18,7 @@
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.specs</groupId>
-      <artifactId>specs</artifactId>
-      <version>1.2.5</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_2.12</artifactId>
@@ -44,11 +39,16 @@
       <version>1.4.2</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.databricks/spark-csv -->
+    <dependency>
+      <groupId>com.databricks</groupId>
+      <artifactId>spark-csv_2.11</artifactId>
+      <version>1.4.0</version>
+    </dependency>
 
    </dependencies>
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
     <plugins>
       <plugin>
         <!-- see http://davidb.github.com/scala-maven-plugin -->
@@ -72,33 +72,29 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.21.0</version>
-        <configuration>
-          <!-- Tests will be run with scalatest-maven-plugin instead -->
-          <skipTests>true</skipTests>
-        </configuration>
-      </plugin>
-<!--      <plugin>
-        <groupId>org.scalatest</groupId>
-        <artifactId>scalatest-maven-plugin</artifactId>
-        <version>2.0.0</version>
-        <configuration>
-          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-          <junitxml>.</junitxml>
-          <filereports>TestSuiteReport.txt</filereports>
-          &lt;!&ndash; Comma separated list of JUnit test class names to execute &ndash;&gt;
-          <jUnitClasses>samples.AppTest</jUnitClasses>
-        </configuration>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.1</version>
         <executions>
           <execution>
-            <id>test</id>
+            <phase>package</phase>
             <goals>
-              <goal>test</goal>
+              <goal>shade</goal>
             </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>com.develop24k.SQLContextExample</Main-Class>
+                    <Build-Number>123</Build-Number>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
-      </plugin>-->
+      </plugin>
+
+
     </plugins>
   </build>
 </project>

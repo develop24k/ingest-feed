@@ -18,6 +18,8 @@ object SQLContextExample extends App {
   val sqlContext:SQLContext = spark.sqlContext
 
   //read csv with options
+  println(config.getString("feed_path"))
+
   val df = sqlContext.read.options(Map("inferSchema"->"true","delimiter"->",","header"->"true"))
     .csv(config.getString("feed_path")).cache()
 
